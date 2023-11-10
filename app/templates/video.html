@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center">
+    <video
+        id="my-video"
+        class="video-js"
+        controls
+        preload="auto"
+        width="1000"
+        height="800"
+        data-setup="{}"
+    >
+        <source src="/video/{{path}}" type="video/mp4" />
+        <source src="/video/{{path}}" type="video/webm" />
+    </video>
+
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script>
+        async function send(){
+            const user_name = document.getElementById("user_name").value;
+
+            await fetch("/users/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json" },
+                body: JSON.stringify({name: user_name})
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.href = "/pages/chat"
+                } else {
+                    document.getElementById("warning").textContent = "error";
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="flex flex-col items-center justify-center h-screen">
+        <span class="font-bold text-3xl mb-10">
+            Registration
+        </span>
+        <div class="flex flex-col items-start text-xl mb-5">
+            <label for="user_name" class="mb-1">Name</label>
+            <input class="border-b-2 border-yellow-400 mb-4"
+                   id="user_name"
+                   name="user_name"
+                   type="text"
+                   value=""
+                   placeholder="My name">
+
+            <span id="warning" class="text-sm text-red-400"></span>
+        </div>
+        <button onclick="send()" class="text-xl bg-yellow-400 px-3 py-2 rounded-3xl mb-3">
+            Send
+        </button>
+    </div>
+{% endblock %}

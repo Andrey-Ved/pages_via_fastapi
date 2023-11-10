@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ url_for('static', path='images/logo.jpg') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        async function logoutUser() {
+            await fetch("/users/logout", {
+                method: 'POST',
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.href = "/pages/video"
+                }
+            });
+        }
+    </script>
+
+    {% block head %}{% endblock %}
+
+    <title>Example api</title>
+</head>
+<body>
+    <nav class="mb-10">
+        <div class="flex justify-between px-8 py-3 text-2xl">
+            <ul class="flex gap-x-5">
+                <li>
+                    <a class="nav-link" href="/">
+                        Chat
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/pages/video">
+                        Video
+                    </a>
+                </li>
+            </ul>
+            <ul class="flex gap-x-5">
+                <li>
+                    <a class="nav-link" href="/pages/login">
+                        Login
+                    </a>
+                </li>
+                <li>
+                    <button onclick="logoutUser()">
+                        Logout
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <hr/>
+    </nav>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

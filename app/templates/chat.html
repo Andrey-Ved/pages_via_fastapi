@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+    async function outCurrentUser() {
+        fetch('/users/current_user', {method: 'GET'})
+            .then(response => response.json())
+            .then(result => {
+                let user = result
+                document.querySelector("#ws-name").textContent = user.name;
+                document.querySelector("#ws-id").textContent = user.id;
+            })
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center">
+    <h1>WebSocket Chat</h1>
+    <br>
+    <h2>Your Id: <span id="ws-id"></span></h2>
+    <h2>Your Name: <span id="ws-name"></span></h2>
+    <br>
+    <form action="" onsubmit="sendMessage(event)">
+        <label for="messageText" class="mb-1">
+            message text
+        </label>
+        <input class="bg-yellow-300" type="text" id="messageText" autocomplete="off"/>
+        <button class="text-xl bg-yellow-400 px-3 py-2 rounded-3xl mb-3">
+            Send
+        </button>
+    </form>
+    <br>
+    <ul id='messages'>
+    </ul>
+</div>
+<script>
+
+    function getCookie(CookieName){
+        let result;
+        let value = `; ${document.cookie}`;
+        let parts = value.split(`; ${CookieName}=`);
+        if (parts.length === 2) {
+            result = parts.pop().split(';').shift();
+        } else {
+            result = null
+        }
+        return result;
+    }
+
+    example_user_id = getCookie("example_user_id");
+    let user_id;
+
+    if (example_user_id === null) {
+        user_id = Date.now();
+    } else {
+        user_id = example_user_id;
+    }
+
+    function appendMessage(msg) {
+        let messages = document.getElementById('messages')
+        let message = document.createElement('li')
+        let content = document.createTextNode(msg)
+        message.appendChild(content)
+        messages.appendChild(message)
+    }
+
+    let ws = new WebSocket(`ws://localhost:8000/chat/ws/${user_id}`);
+    ws.onmessage = function (event) {
+        appendMessage(event.data)
+    };
+
+    function sendMessage(event) {
+        let input = document.getElementById("messageText")
+        ws.send(input.value)
+        input.value = ''
+        event.preventDefault()
+    }
+
+    outCurrentUser()
+</script>
+{% endblock %}
